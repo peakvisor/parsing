@@ -1,4 +1,3 @@
-import re
 from copy import deepcopy
 
 NOT_FINISHED = -1

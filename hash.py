@@ -1,6 +1,5 @@
-from parser import *
-from printer import *
-from sys import argv
+from generation.parser import *
+from generation.decode_builder import *
 
 def add_decode(src):
     mappings = find_mappings(src)
@@ -24,19 +23,14 @@ def add_decode(src):
     return src
 
 def main():
-    f = open("enumExamples.hpp")
+    f = open("data/input_header.h")
     src = f.readlines()
     f.close()
     src = add_decode(src)
-    f = open(argv[1], "w")
-    o = open("output.h", "w")
-    f.write("#ifndef MAPPINGS_H\n")
-    f.write("#define MAPPINGS_H\n\n")
+    o = open("bench/mappings.h", "w")
     for line in src:
-        f.write(line)
         o.write(line)
-    f.write("\n#endif // MAPPINGS_H\n")
-    f.close()
+    o.close()
 
 if __name__ == "__main__":
     main()

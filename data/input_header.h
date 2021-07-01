@@ -1,3 +1,8 @@
+#ifndef MAPPINGS_H
+#define MAPPINGS_H
+
+using CGFloat = double;
+
 struct DVGGeoTrail {
     // temporary; a subset of actual tags mapped for routing/rendering simplicity
     //      for the sake of renderer convenience has to be contiguous
@@ -288,8 +293,17 @@ struct TagsMapping {
 };
 
 struct Color {
-        float r, g, b;
+    CGFloat r, g, b;
+
+    static constexpr Color black() { return {0, 0, 0}; }
+    static constexpr Color white() { return {1, 1, 1}; }
+
+    inline bool operator ==(const Color &other) const {
+        return std::tie(r, g, b) == std::tie(other.r, other.g, other.b);
+    }
+    CGFloat lightness() const { return (r + g + b) / 3; }
 };
+
 struct ColorMapping { using E = Color;
     static constexpr DVGKeyPair<E> values[]{ // TODO: hm. are they already sRGB corrected?
         {E{0.0, 0.0, 0}, "black"}, {E{0.3, 0.3, 1}, "blue"},
@@ -323,3 +337,101 @@ struct TypeMapping { using E = Type;
         {E::lower, "rectangle_lower"}, // yes, non-official, yet appears 40 times in USA only
     };
 };
+
+struct DVGGeoResource {
+    enum class Type : uint16_t {
+        kUnknown = 0,
+        kDEM,
+        kHDDEM,
+        kTEX,
+        kGDB,
+        kTRL,
+
+        kHDSAT,
+
+        kSAT,
+        kLSAT,
+        kLTEX,
+        kLDEM,
+
+        kHDWSAT,
+        kWSAT,
+        kLWSAT,
+
+        kRESOURCE_TYPE_COUNT
+    };
+
+    enum class Format : uint16_t {
+        kEmpty,
+        kRaw,
+        kM2SEP,
+        kJPEG2000,
+        kDFRAC,
+        kGDB,
+        kTRL,
+        kHEIC
+    };
+};
+
+struct ResourceFormatMapping {
+    using E = DVGGeoResource::Format;
+    static constexpr DVGKeyPair<E> values[]{
+        {E::kEmpty, "EMPTY"},
+        {E::kRaw, "RAW"},
+        {E::kM2SEP, "M2SEP"},
+        {E::kJPEG2000, "J2K"},
+        {E::kDFRAC, "DFRAC"},
+        {E::kGDB, "GDB"},
+        {E::kTRL, "TRL"},
+        {E::kHEIC, "HEIC"},
+    };
+};
+
+struct ResourceTypeMapping {
+    using E = DVGGeoResource::Type;
+    static constexpr DVGKeyPair<E> values[]{
+        {DVGGeoResource::Type::kDEM, "DEM"},
+        {DVGGeoResource::Type::kHDDEM, "HDDEM"},
+        {DVGGeoResource::Type::kTEX, "TEX"},
+        {DVGGeoResource::Type::kGDB, "GDB"},
+        {DVGGeoResource::Type::kTRL, "TRL"},
+
+        {DVGGeoResource::Type::kHDSAT, "HDSAT"},
+
+        {DVGGeoResource::Type::kSAT, "SAT"},
+        {DVGGeoResource::Type::kLSAT, "LSAT"},
+        {DVGGeoResource::Type::kLTEX, "LTEX"},
+        {DVGGeoResource::Type::kLDEM, "LDEM"},
+
+        {DVGGeoResource::Type::kHDWSAT, "HDWSAT"},
+        {DVGGeoResource::Type::kWSAT, "WSAT"},
+        {DVGGeoResource::Type::kLWSAT, "LWSAT"},
+    };
+
+    static inline E decode(std::string_view string) {
+        using T = ResourceTypeMapping::E;
+        if (string.size() >= 3) {
+            switch (string[2]) {
+                case 'A': return string[0] == 'L' ?
+                        (string == "LSAT" ? T::kLSAT : T{}):
+                        string == "WSAT" ? T::kWSAT : T{};
+                case 'B': return string == "GDB" ? T::kGDB : T{};
+                case 'D': return string == "HDDEM" ? T::kHDDEM : T{};
+                case 'E': return string[1] == 'T' ?
+                        (string == "LTEX" ? T::kLTEX : T{}):
+                        string == "LDEM" ? T::kLDEM : T{};
+                case 'L': return string == "TRL" ? T::kTRL : T{};
+                case 'M': return string == "DEM" ? T::kDEM : T{};
+                case 'S': return string[1] == 'D' ?
+                        (string == "HDSAT" ? T::kHDSAT : T{}) :
+                        string == "LWSAT" ? T::kLWSAT : T{};
+                case 'T': return string == "SAT" ? T::kSAT : T{};
+                case 'W': return string == "HDWSAT" ? T::kHDWSAT : T{};
+                default: return string == "TEX" ? T::kTEX : T{};
+            }
+        }
+        return {};
+    }
+};
+
+#endif // MAPPINGS_H

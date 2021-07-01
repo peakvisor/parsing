@@ -1,3 +1,8 @@
+#ifndef MAPPINGS_H
+#define MAPPINGS_H
+
+using CGFloat = double;
+
 struct DVGGeoTrail {
     // temporary; a subset of actual tags mapped for routing/rendering simplicity
     //      for the sake of renderer convenience has to be contiguous
@@ -160,7 +165,7 @@ struct PeakCategoryMapping {
         {E::ahp46, "AHP46"},
     };
     
-    static inline E decode(std::string_view string) {
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
         if (string.size() < 4) { return E{}; }
         switch (string[1]) {
             case '3':
@@ -217,7 +222,7 @@ struct Legacy_EntryTypeMapping {
         {E::kViewpoint, "hotel"},
     };
     
-    static inline E decode(std::string_view string) {
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
         switch (string.size()) {
             case 5:
                 return !std::memcmp(string.begin(), "hotel", 5) ? E::kViewpoint : E{};
@@ -255,7 +260,7 @@ struct EntryTypeMapping {
         {E::kPeak, "peak"}, // khm. used by d__bookmarkedEntriesCache only
     };
 
-    static inline E decode(std::string_view string) {
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
         switch (string.size()) {
             case 4:
                 switch (string[2]) {
@@ -312,7 +317,7 @@ struct FunicularTypeMapping {
         {E::kDVGTrailTypeNarrowGauge, "rail"}, // TODO: beware types coalescing; at least icon/type-name shall differ
     };
     
-    static inline E decode(std::string_view string) {
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
         switch (string.size()) {
             case 4:
                 return !std::memcmp(string.begin(), "rail", 4) ? E::kDVGTrailTypeNarrowGauge : E{};
@@ -383,7 +388,7 @@ struct TagsMapping {
         {E::viewpointType, "viewpointType"}, // for Type::viewpoint
     };
     
-    static inline E decode(std::string_view string) {
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
         switch (string.size()) {
             case 3:
                 return !std::memcmp(string.begin(), "url", 3) ? E::url : E{};
@@ -438,8 +443,17 @@ struct TagsMapping {
 };
 
 struct Color {
-        float r, g, b;
+    CGFloat r, g, b;
+
+    static constexpr Color black() { return {0, 0, 0}; }
+    static constexpr Color white() { return {1, 1, 1}; }
+
+    inline bool operator ==(const Color &other) const {
+        return std::tie(r, g, b) == std::tie(other.r, other.g, other.b);
+    }
+    CGFloat lightness() const { return (r + g + b) / 3; }
 };
+
 struct ColorMapping { using E = Color;
     static constexpr DVGKeyPair<E> values[]{ // TODO: hm. are they already sRGB corrected?
         {E{0.0, 0.0, 0}, "black"}, {E{0.3, 0.3, 1}, "blue"},
@@ -452,7 +466,7 @@ struct ColorMapping { using E = Color;
         {E{0.5, 0.5, 0.5}, "gray"}, {E{0.0, 0.8, 0.8}, "aqua"}, {E{1.0, 0.3, 0.6}, "pink"},
     };
     
-    static inline E decode(std::string_view string) {
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
         if (string.size() < 3) { return E{}; }
         switch (string[0]) {
             case 'a':
@@ -513,7 +527,7 @@ struct TypeMapping { using E = Type;
         {E::lower, "rectangle_lower"}, // yes, non-official, yet appears 40 times in USA only
     };
     
-    static inline E decode(std::string_view string) {
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
         switch (string.size()) {
             case 1:
                 return !std::memcmp(string.begin(), "x", 1) ? E::x : E{};
@@ -575,3 +589,137 @@ struct TypeMapping { using E = Type;
         return E{};
     }
 };
+
+struct DVGGeoResource {
+    enum class Type : uint16_t {
+        kUnknown = 0,
+        kDEM,
+        kHDDEM,
+        kTEX,
+        kGDB,
+        kTRL,
+
+        kHDSAT,
+
+        kSAT,
+        kLSAT,
+        kLTEX,
+        kLDEM,
+
+        kHDWSAT,
+        kWSAT,
+        kLWSAT,
+
+        kRESOURCE_TYPE_COUNT
+    };
+
+    enum class Format : uint16_t {
+        kEmpty,
+        kRaw,
+        kM2SEP,
+        kJPEG2000,
+        kDFRAC,
+        kGDB,
+        kTRL,
+        kHEIC
+    };
+};
+
+struct ResourceFormatMapping {
+    using E = DVGGeoResource::Format;
+    static constexpr DVGKeyPair<E> values[]{
+        {E::kEmpty, "EMPTY"},
+        {E::kRaw, "RAW"},
+        {E::kM2SEP, "M2SEP"},
+        {E::kJPEG2000, "J2K"},
+        {E::kDFRAC, "DFRAC"},
+        {E::kGDB, "GDB"},
+        {E::kTRL, "TRL"},
+        {E::kHEIC, "HEIC"},
+    };
+    
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+        if (string.size() < 3) { return E{}; }
+        switch (string[0]) {
+            case 'D':
+                return string == "DFRAC" ? E::kDFRAC : E{};
+            case 'E':
+                return string == "EMPTY" ? E::kEmpty : E{};
+            case 'G':
+                return string == "GDB" ? E::kGDB : E{};
+            case 'H':
+                return string == "HEIC" ? E::kHEIC : E{};
+            case 'J':
+                return string == "J2K" ? E::kJPEG2000 : E{};
+            case 'M':
+                return string == "M2SEP" ? E::kM2SEP : E{};
+            case 'R':
+                return string == "RAW" ? E::kRaw : E{};
+            default:
+                return string == "TRL" ? E::kTRL : E{};
+        }
+        return E{};
+    }
+};
+
+struct ResourceTypeMapping {
+    using E = DVGGeoResource::Type;
+    static constexpr DVGKeyPair<E> values[]{
+        {DVGGeoResource::Type::kDEM, "DEM"},
+        {DVGGeoResource::Type::kHDDEM, "HDDEM"},
+        {DVGGeoResource::Type::kTEX, "TEX"},
+        {DVGGeoResource::Type::kGDB, "GDB"},
+        {DVGGeoResource::Type::kTRL, "TRL"},
+
+        {DVGGeoResource::Type::kHDSAT, "HDSAT"},
+
+        {DVGGeoResource::Type::kSAT, "SAT"},
+        {DVGGeoResource::Type::kLSAT, "LSAT"},
+        {DVGGeoResource::Type::kLTEX, "LTEX"},
+        {DVGGeoResource::Type::kLDEM, "LDEM"},
+
+        {DVGGeoResource::Type::kHDWSAT, "HDWSAT"},
+        {DVGGeoResource::Type::kWSAT, "WSAT"},
+        {DVGGeoResource::Type::kLWSAT, "LWSAT"},
+    };
+
+    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+        if (string.size() < 3) { return E{}; }
+        switch (string[0]) {
+            case 'D':
+                return string == "DEM" ? DVGGeoResource::Type::kDEM : E{};
+            case 'G':
+                return string == "GDB" ? DVGGeoResource::Type::kGDB : E{};
+            case 'H':
+                if (string == "HDDEM") return DVGGeoResource::Type::kHDDEM;
+                if (string == "HDSAT") return DVGGeoResource::Type::kHDSAT;
+                if (string == "HDWSAT") return DVGGeoResource::Type::kHDWSAT;
+                return E{};
+            case 'L':
+                switch (string[1]) {
+                    case 'D':
+                        return string == "LDEM" ? DVGGeoResource::Type::kLDEM : E{};
+                    case 'S':
+                        return string == "LSAT" ? DVGGeoResource::Type::kLSAT : E{};
+                    case 'T':
+                        return string == "LTEX" ? DVGGeoResource::Type::kLTEX : E{};
+                    default:
+                        return string == "LWSAT" ? DVGGeoResource::Type::kLWSAT : E{};
+                }
+            case 'S':
+                return string == "SAT" ? DVGGeoResource::Type::kSAT : E{};
+            case 'T':
+                switch (string[1]) {
+                    case 'E':
+                        return string == "TEX" ? DVGGeoResource::Type::kTEX : E{};
+                    default:
+                        return string == "TRL" ? DVGGeoResource::Type::kTRL : E{};
+                }
+            default:
+                return string == "WSAT" ? DVGGeoResource::Type::kWSAT : E{};
+        }
+        return E{};
+    }
+};
+
+#endif // MAPPINGS_H
