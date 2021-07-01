@@ -1,4 +1,4 @@
-from rules import SIZE_INDEX
+from generation.rules import SIZE_INDEX
 
 class EnumField:
     def __init__(self, name, string):

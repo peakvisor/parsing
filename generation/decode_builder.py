@@ -1,13 +1,11 @@
 import random
 from datetime import datetime
-from printer import Printer
-from rules import *
-from enum_field import EnumField
+from generation.printer import Printer
+from generation.rules import *
+from generation.enum_field import EnumField
+from generation.parser import *
 
 random.seed(datetime.now())
-
-def minl(strings):
-    return min([len(x) for x in strings])
 
 def generate_switches(p: Printer, rules, fields):
     switch_map = dict()
@@ -78,3 +76,24 @@ def generate_decode(p: Printer, fields):
     p("return E{};")
     p.deindent()
     p("}")
+
+def add_decode(src):
+    mappings = find_mappings(src)
+    mappings.reverse()
+
+    for m in mappings:
+        values = m.find_sub_block("DVGKeyPair<E> values")
+        enum = parse_values(values.insides_to_str())
+        fields = [EnumField(x[0], x[1]) for x in enum]
+        p = Printer()
+        p.indent()
+        generate_decode(p, fields)
+        decode_space = m.find_sub_block("decode(std::string_view string)")
+
+        if src[decode_space.start - 1].strip() == "":
+            decode = [p.text]
+        else:
+            decode = [p.get_indent_str() + "\n", p.text]
+
+        src = src[:decode_space.start] + decode + src[decode_space.end:]
+    return src

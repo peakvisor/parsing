@@ -41,7 +41,7 @@ def next_rule(rule, min_length):
     return rule
 
 def find_differentiating_rule(strings):
-    m = minl(strings)
+    m = min([len(x) for x in strings])
     best_rule = None
     best_rule_score = 0
     for i in range(1, m + 2):
