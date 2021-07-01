@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <random>
+#include <memory>
 
 struct StringWithViews {
     std::shared_ptr<std::string> string;
