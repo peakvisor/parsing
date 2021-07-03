@@ -1,5 +1,6 @@
-#ifndef MAPPINGS_H
-#define MAPPINGS_H
+namespace generated_mappings {
+
+static constexpr size_t kRepetitions = 10;
 
 using CGFloat = double;
 
@@ -722,4 +723,14 @@ struct ResourceTypeMapping {
     }
 };
 
-#endif // MAPPINGS_H
+TEST_MAPPING(PeakCategory)
+TEST_MAPPING(Legacy_EntryType)
+TEST_MAPPING(EntryType)
+TEST_MAPPING(FunicularType)
+TEST_MAPPING(Tags)
+TEST_MAPPING(Color)
+TEST_MAPPING(Type)
+TEST_MAPPING(ResourceFormat)
+TEST_MAPPING(ResourceType)
+
+} // namespace

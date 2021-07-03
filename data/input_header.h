@@ -1,6 +1,3 @@
-#ifndef MAPPINGS_H
-#define MAPPINGS_H
-
 using CGFloat = double;
 
 struct DVGGeoTrail {
@@ -433,5 +430,3 @@ struct ResourceTypeMapping {
         return {};
     }
 };
-
-#endif // MAPPINGS_H

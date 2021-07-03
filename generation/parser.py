@@ -118,3 +118,12 @@ def parse_values(values_string):
         enum_string = values_string[opening_quote + 1: closing_quote]
         enum.append((enum_value, enum_string))
     return enum
+
+def get_mapping_name(s):
+    start_marker = "struct "
+    end_marker = "Mapping"
+    start = s.find(start_marker) + len(start_marker)
+    end = s.find(end_marker, start)
+    if -1 in {start, end}:
+        return None
+    return s[start:end].lstrip()

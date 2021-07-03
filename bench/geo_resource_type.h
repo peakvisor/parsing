@@ -220,7 +220,7 @@ struct ResourceType {
 
 #define RESOURCE_TYPE_BENCHMARK(Decoder) VERIFIED_BENCHMARK(Decoder, ResourceType);
 
-RESOURCE_TYPE_BENCHMARK(ProdDecoder<ResourceTypeMapping>);
+RESOURCE_TYPE_BENCHMARK(SwitchDecoder<ResourceTypeMapping>);
 RESOURCE_TYPE_BENCHMARK(DefaultDecoder<ResourceTypeMapping>);
 RESOURCE_TYPE_BENCHMARK(FrozenByFirstThree);
 RESOURCE_TYPE_BENCHMARK(FrozenDefault);

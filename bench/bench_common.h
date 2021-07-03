@@ -2,6 +2,7 @@
 #define BENCH_LAB_TESTING_H
 
 #include "read_strings.h"
+#include "dvg.h"
 
 #include <frozen/unordered_map.h>
 #include <frozen/string.h>
@@ -89,5 +90,16 @@ bool hasEnding(std::string const &fullString, std::string const &ending) {
 BENCHMARK_TEMPLATE2(Test, Decoder, EnumTraits)->Repetitions(kRepetitions)
 
 #define RESOLVED_MACRO_BENCHMARK(Test, Decoder, EnumTraits) BENCHMARK_TEMPLATE2(Test, Decoder, EnumTraits)->Repetitions(kRepetitions)
+
+#define TEST_MAPPING(NAME) \
+static auto CONCAT(NAME, Strings) = generateTestStrings<CONCAT(NAME, Mapping)>();\
+struct CONCAT(NAME, Traits) {\
+    using Mapping = CONCAT(NAME, Mapping);\
+    static inline std::vector<std::string_view> &views() {\
+        return CONCAT(NAME, Strings).views;\
+    }\
+};\
+VERIFIED_BENCHMARK(SwitchDecoder<CONCAT(NAME, Mapping)>, CONCAT(NAME, Traits));    \
+RESOLVED_MACRO_BENCHMARK(Test, DefaultDecoder<CONCAT(NAME, Mapping)>, CONCAT(NAME, Traits));
 
 #endif //BENCH_LAB_TESTING_H

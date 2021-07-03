@@ -423,7 +423,7 @@ struct EntryType {
 
 #define ENTRY_TYPE_BENCHMARK(Decoder) VERIFIED_BENCHMARK(Decoder, EntryType)
 
-ENTRY_TYPE_BENCHMARK(ProdDecoder<EntryTypeMapping>);
+ENTRY_TYPE_BENCHMARK(SwitchDecoder<EntryTypeMapping>);
 ENTRY_TYPE_BENCHMARK(DefaultDecoder<EntryTypeMapping>);
 ENTRY_TYPE_BENCHMARK(FrozenBySizeAndThird);
 ENTRY_TYPE_BENCHMARK(FrozenDefault);

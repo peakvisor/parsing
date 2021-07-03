@@ -77,8 +77,10 @@ def generate_decode(p: Printer, fields):
     p.deindent()
     p("}")
 
-def add_decode(src):
+def add_decode(src, benchmark_wrapper=False, reps=0):
     mappings = find_mappings(src)
+    if benchmark_wrapper:
+        mapping_names = [get_mapping_name(src[m.start]) for m in mappings]
     mappings.reverse()
 
     for m in mappings:
@@ -96,4 +98,25 @@ def add_decode(src):
             decode = [p.get_indent_str() + "\n", p.text]
 
         src = src[:decode_space.start] + decode + src[decode_space.end:]
+
+    if benchmark_wrapper:
+        src = add_benchmark_wrapper(src, mapping_names, reps)
+
     return src
+
+def add_benchmark_wrapper(src, mapping_names, reps):
+    prefix = [
+        "namespace generated_mappings {\n",
+        "\n"
+    ]
+    if reps > 0:
+        prefix += [
+            "static constexpr size_t kRepetitions = " + str(reps) + ";\n"
+            "\n"
+        ]
+    suffix = ["\n"]
+    suffix += ["TEST_MAPPING(" + m + ")\n" for m in mapping_names]
+    suffix.append("\n")
+    suffix.append("} // namespace\n")
+
+    return prefix + src + suffix

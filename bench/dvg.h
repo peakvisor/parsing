@@ -81,7 +81,7 @@ inline __attribute__((always_inline)) Enum decode(std::string_view string) {
 }
 
 template <typename Mapping, typename Enum = typename Mapping::E>
-struct ProdDecoder {
+struct SwitchDecoder {
     static inline Enum decode(const std::string_view &view) {
         return ::decode<Mapping>(StringView(&view.front(), view.size()));
     }

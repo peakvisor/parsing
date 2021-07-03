@@ -205,7 +205,7 @@ struct ResourceFormat {
 
 RESOURCE_FORMAT_BENCHMARK(SwitchFirstMessedOrder);
 RESOURCE_FORMAT_BENCHMARK(SwitchFirstMessedDefault);
-RESOURCE_FORMAT_BENCHMARK(ProdDecoder<ResourceFormatMapping>);
+RESOURCE_FORMAT_BENCHMARK(SwitchDecoder<ResourceFormatMapping>);
 RESOURCE_FORMAT_BENCHMARK(DefaultDecoder<ResourceFormatMapping>);
 RESOURCE_FORMAT_BENCHMARK(FrozenByFirst);
 RESOURCE_FORMAT_BENCHMARK(FrozenByFirstThree);

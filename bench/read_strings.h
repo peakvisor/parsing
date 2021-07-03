@@ -5,6 +5,7 @@
 #include <string>
 #include <random>
 #include <memory>
+#include <fstream>
 
 struct StringWithViews {
     std::shared_ptr<std::string> string;
