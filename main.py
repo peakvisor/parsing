@@ -10,14 +10,14 @@ def generate(input_register, output_register, benchmark_wrapper=False, reps=0):
     for line in src:
         output_register.write(line)
 
-def launch(cxx_compiler):
-    print("__file__")
+def bench(cxx_compiler):
     os.chdir("build")
     run(["cmake", "-S", "../bench", "-DCMAKE_BUILD_TYPE=Release",
          "-DCMAKE_CXX_COMPILER="+cxx_compiler])
     run(["make", "fast_enum_bench"])
     r = run("./fast_enum_bench", capture_output=True)
     out = r.stdout.decode("utf8")
+    open("out.txt", "w").write(out)
     parse_bench_results.report([line for line in out.split("\n") if "median" in line])
 
 def main():
@@ -32,7 +32,7 @@ def main():
                 for line in src:
                     prev_mappings.write(line)
         elif sys.argv[1] == "bench":
-            launch(sys.argv[2])
+            bench(sys.argv[2])
     else:
         generate(sys.stdin, sys.stdout)
 
