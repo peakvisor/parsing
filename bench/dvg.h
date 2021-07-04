@@ -47,11 +47,24 @@ struct DVGKeyPair {
         return keyLength == otherLength && std::strncmp(other, key, keyLength) == 0;
     }
 
+    inline bool equalsMemcmp(const char *other, int otherLength) const {
+        return keyLength == otherLength && std::memcmp(other, key, keyLength) == 0;
+    }
+
     template <typename Walue = Value, int count>
     static inline Walue valueForKey(const StringView &key, const DVGKeyPair (&mapping)[count], Walue fallback = {}) {
         auto length = key.length();
         for (auto &variant : mapping) {
             if (variant.equals(key.begin, length)) { return variant.value; }
+        }
+        return fallback;
+    }
+
+    template <typename Walue = Value, int count>
+    static inline Walue valueForKeyMemcmp(const StringView &key, const DVGKeyPair (&mapping)[count], Walue fallback = {}) {
+        auto length = key.length();
+        for (auto &variant : mapping) {
+            if (variant.equalsMemcmp(key.begin, length)) { return variant.value; }
         }
         return fallback;
     }

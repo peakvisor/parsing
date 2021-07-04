@@ -166,7 +166,7 @@ struct PeakCategoryMapping {
         {E::ahp46, "AHP46"},
     };
     
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
         if (string.size() < 4) { return E{}; }
         switch (string[1]) {
             case '3':
@@ -223,7 +223,8 @@ struct Legacy_EntryTypeMapping {
         {E::kViewpoint, "hotel"},
     };
     
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
+        if (string.size() < 5) { return E{}; }
         switch (string.size()) {
             case 5:
                 return !std::memcmp(string.begin(), "hotel", 5) ? E::kViewpoint : E{};
@@ -261,7 +262,8 @@ struct EntryTypeMapping {
         {E::kPeak, "peak"}, // khm. used by d__bookmarkedEntriesCache only
     };
 
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
+        if (string.size() < 4) { return E{}; }
         switch (string.size()) {
             case 4:
                 switch (string[2]) {
@@ -318,7 +320,8 @@ struct FunicularTypeMapping {
         {E::kDVGTrailTypeNarrowGauge, "rail"}, // TODO: beware types coalescing; at least icon/type-name shall differ
     };
     
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
+        if (string.size() < 4) { return E{}; }
         switch (string.size()) {
             case 4:
                 return !std::memcmp(string.begin(), "rail", 4) ? E::kDVGTrailTypeNarrowGauge : E{};
@@ -389,7 +392,8 @@ struct TagsMapping {
         {E::viewpointType, "viewpointType"}, // for Type::viewpoint
     };
     
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
+        if (string.size() < 3) { return E{}; }
         switch (string.size()) {
             case 3:
                 return !std::memcmp(string.begin(), "url", 3) ? E::url : E{};
@@ -467,7 +471,7 @@ struct ColorMapping { using E = Color;
         {E{0.5, 0.5, 0.5}, "gray"}, {E{0.0, 0.8, 0.8}, "aqua"}, {E{1.0, 0.3, 0.6}, "pink"},
     };
     
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
         if (string.size() < 3) { return E{}; }
         switch (string[0]) {
             case 'a':
@@ -528,7 +532,8 @@ struct TypeMapping { using E = Type;
         {E::lower, "rectangle_lower"}, // yes, non-official, yet appears 40 times in USA only
     };
     
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
+        if (string.size() < 1) { return E{}; }
         switch (string.size()) {
             case 1:
                 return !std::memcmp(string.begin(), "x", 1) ? E::x : E{};
@@ -639,7 +644,7 @@ struct ResourceFormatMapping {
         {E::kHEIC, "HEIC"},
     };
     
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
         if (string.size() < 3) { return E{}; }
         switch (string[0]) {
             case 'D':
@@ -684,7 +689,7 @@ struct ResourceTypeMapping {
         {DVGGeoResource::Type::kLWSAT, "LWSAT"},
     };
 
-    static inline __attribute__((always_inline))  E decode(const std::string_view &string) {
+    static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
         if (string.size() < 3) { return E{}; }
         switch (string[0]) {
             case 'D':
