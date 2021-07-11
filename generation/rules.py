@@ -1,3 +1,6 @@
+from copy import deepcopy
+from collections import defaultdict
+
 NO_HASH = -2
 SIZE_INDEX = -1
 
@@ -12,7 +15,7 @@ def differentiate(strings, hash_fun):
         d[h].append(s)
     return d
 
-def get_rule(rule_index):
+def get_rule_hash(rule_index):
     if rule_index == SIZE_INDEX:
         return lambda x: len(x)
     return lambda x: x[rule_index] if rule_index < len(x) else NO_HASH
@@ -26,10 +29,13 @@ def combine_hashes(hashes):
     return combine_hashes(hashes[:-2] + [combine_two_hashes(hashes[-2], hashes[-1])])
 
 def differentiate_by_rules(strings, rules):
-    hash_fun = combine_hashes([get_rule(x) for x in rules])
+    hash_fun = combine_hashes([get_rule_hash(x) for x in rules])
     return differentiate(strings, hash_fun)
 
-def next_rule(rule, min_length):
+def differentiate_by_one_rule(strings, rule):
+    return differentiate(strings, get_rule_hash(rule))
+
+def get_next_rule(rule, min_length):
     rule_index_to_increment = -1
     while rule[rule_index_to_increment] == rule_index_to_increment + min_length:
         if rule_index_to_increment == -len(rule):
@@ -53,6 +59,6 @@ def find_differentiating_rule(strings):
                 best_rule_score = len(diff)
                 if best_rule_score == len(strings):
                     return best_rule
-            rule = next_rule(rule, m)
+            rule = get_next_rule(rule, m)
 
     return best_rule

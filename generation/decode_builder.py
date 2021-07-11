@@ -4,12 +4,53 @@ from generation.printer import Printer
 from generation.rules import *
 from generation.enum_field import EnumField
 from generation.parser import *
+from generation import decision_tree
 
 random.seed(datetime.now())
 
+def generate_switches_from_tree(p: Printer, tree: decision_tree.Node, strings_to_names):
+    switch_arg_string = ""
+    if tree.rule == SIZE_INDEX:
+        switch_arg_string = "string.size()"
+    else:
+        if tree.length_check:
+            switch_arg_string += "string.size() < " + str(tree.checked_length) + " ? '\\0' : "
+        switch_arg_string += "string[" + str(tree.rule) + "]"
+    p("switch(" + switch_arg_string + ") {")
+    p.indent()
+    value_kids = sorted([(key, value) for key, value in tree.kids.items()], key=lambda x: x[0])
+    had_default = False
+    for value, kid in value_kids:
+        if value == value_kids[-1][0] and tree.rule != SIZE_INDEX:
+            had_default = True
+            p("default: ")
+        else:
+            value_string = "'" + str(value) + "'" if tree.rule != SIZE_INDEX else str(value)
+            p("case " + value_string + ":")
+
+        p.indent()
+        if kid.is_leaf():
+            name = strings_to_names[kid.strings[0]]
+            field = EnumField(name, kid.strings[0])
+            field.known_fields = kid.prev_rules
+            p(field.return_string_or_empty())
+        else:
+            generate_switches_from_tree(p, kid, strings_to_names)
+        p.deindent()
+    if not had_default:
+        p("default: return E{};")
+    p.deindent()
+    p("}")
+
+def generate_switches_via_tree(p: Printer, fields):
+    strings_to_names = {f.string: f.name for f in fields}
+    strings = {f.string for f in fields}
+    tree = decision_tree.Node(strings, set(), 0)
+    generate_switches_from_tree(p, tree, strings_to_names)
+
 def generate_switches(p: Printer, rules, fields):
     switch_map = dict()
-    rule = get_rule(rules[0])
+    rule = get_rule_hash(rules[0])
     by_size = rules[0] == SIZE_INDEX
     for field in fields:
         i = rule(field.string)
@@ -56,18 +97,19 @@ def generate_switches(p: Printer, rules, fields):
 
 def generate_decode(p: Printer, fields):
     strings = [x.string for x in fields]
-    rule = find_differentiating_rule(strings)
+    # rule = find_differentiating_rule(strings)
     p("static inline __attribute__((always_inline)) E decode(const std::string_view &string) {")
     p.indent()
-    min_length = min([len(x.string) for x in fields])
+    # min_length = min([len(x.string) for x in fields])
     # if rule[0] != SIZE_INDEX:
-    p("if (string.size() < " + str(min_length) + ") { return E{}; }")
-    generate_switches(p, rule, fields)
+    # p("if (string.size() < " + str(min_length) + ") { return E{}; }")
+    generate_switches_via_tree(p, fields)
+    # generate_switches(p, rule, fields)
     p("return E{};")
     p.deindent()
     p("}")
 
-def generateMemcmpValueForKeyDecode(p: Printer):
+def generate_memcmp_value_for_key_decode(p: Printer):
     p("static inline __attribute__((always_inline)) E decode(const std::string_view &string) {")
     p.indent()
     p("return DVGKeyPair<E>::valueForKeyMemcmp(StringView{string}, values, E{});")

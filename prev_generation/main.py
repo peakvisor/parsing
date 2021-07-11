@@ -1,5 +1,9 @@
 from generation.decode_builder import add_decode
 from generation import parse_bench_results
+
+from generation.decision_tree import *
+from generation.printer import Printer
+
 import sys
 import os
 from subprocess import run
@@ -28,6 +32,38 @@ def save():
         for line in src:
             prev_mappings.write(line)
     shutil.copytree("generation", "prev_generation", dirs_exist_ok=True)
+
+def printTree(tree, p: Printer):
+    p("<" + str(tree.rule) + ">, c = " + str(tree.complexity()) + ":")
+    p.indent()
+    for value, kid in tree.kids.items():
+        p(str(value) + ":")
+        p.indent()
+        if kid.is_leaf():
+            p(kid.strings[0])
+        else:
+            printTree(kid, p)
+        p.deindent()
+    p.deindent()
+
+def printTreeForTest(self):
+    strings = ["Ultra",
+               "Top10",
+               "Top50",
+               "14er",
+               "13er",
+               "Volcano",
+               "Glacier",
+               "Munro",
+               "Furth",
+               "TGO40",
+               "JA100",
+               "TW100",
+               "AHP46"]
+    tree = Node(strings, set())
+    p = Printer()
+    printTree(tree, p)
+    print(p.text)
 
 def main():
     if len(sys.argv) > 1:

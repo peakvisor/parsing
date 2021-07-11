@@ -9,7 +9,7 @@ random.seed(datetime.now())
 
 def generate_switches(p: Printer, rules, fields):
     switch_map = dict()
-    rule = get_rule(rules[0])
+    rule = get_rule_hash(rules[0])
     by_size = rules[0] == SIZE_INDEX
     for field in fields:
         i = rule(field.string)
@@ -67,7 +67,7 @@ def generate_decode(p: Printer, fields):
     p.deindent()
     p("}")
 
-def generateMemcmpValueForKeyDecode(p: Printer):
+def generate_memcmp_value_for_key_decode(p: Printer):
     p("static inline __attribute__((always_inline)) E decode(const std::string_view &string) {")
     p.indent()
     p("return DVGKeyPair<E>::valueForKeyMemcmp(StringView{string}, values, E{});")

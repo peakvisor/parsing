@@ -7,7 +7,7 @@
 #include <frozen/unordered_map.h>
 #include <frozen/string.h>
 
-static constexpr size_t kRepetitions = 5;
+static constexpr size_t kRepetitions = 10;
 static constexpr bool kGenerateRandom = true;
 
 struct FirstThreeElsa {

@@ -1,6 +1,6 @@
 from generation.rules import SIZE_INDEX
 
-CHECK_SUBSTR = True
+CHECK_SUBSTR = False
 
 class EnumField:
     def __init__(self, name, string):
