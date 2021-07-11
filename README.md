@@ -23,7 +23,7 @@ To generate headers for benchmarking, use from the root dir:
 
 where repetitions is optional and sets amount of times each benchmark is run.
 
-To save mappings.h for future reference, use
+To save mappings.h and generation python files for future reference, use
 
 <code>python3 main.py save</code>
 
@@ -34,6 +34,10 @@ Keep in mind that it was noticed that launching benchmark with other big process
 
 You can also launch benchmarking (including all the building) via python:
 
-<code>python3 bench compiler</code>
+<code>python3 bench_compare compiler</code>
 
-where compiler is a path to your C++ compiler of choice.
+where compiler is a path to your C++ compiler of choice. C++ build files are created in a build folder, and in out.txt there you will find benchmarking output. In stdout there will be benchmarking comparison useful to compare results of two versions of generations. For that, include only those two mappings headers in main.cpp:
+
+<code>#include "prev_mappings.h"</code>
+
+<code>#include "mappings.h" </code>

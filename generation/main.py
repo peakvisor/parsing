@@ -15,7 +15,7 @@ def generate(input_register, output_register, benchmark_wrapper=False, reps=0):
     for line in src:
         output_register.write(line)
 
-def bench(cxx_compiler):
+def bench_compare(cxx_compiler):
     os.chdir("build")
     cmd = ["cmake", "-S", "../bench", "-DCMAKE_BUILD_TYPE=Release"]
     if cxx_compiler is not None:
@@ -74,7 +74,7 @@ def main():
             generate(open("data/input_header.h"), open("bench/mappings.h", "w"), True, reps=reps)
         elif sys.argv[1] == "save":
             save()
-        elif sys.argv[1] == "bench":
-            bench(cxx_compiler=(sys.argv[2] if len(sys.argv) > 2 else None))
+        elif sys.argv[1] == "bench_compare":
+            bench_compare(cxx_compiler=(sys.argv[2] if len(sys.argv) > 2 else None))
     else:
         generate(sys.stdin, sys.stdout)
