@@ -35,9 +35,11 @@ class Node:
                     new_checked_length = minl if rule >= self.checked_length else self.checked_length
                 potential_kids = {key: Node(value, next_rules, new_checked_length)
                                   for key, value in diff.items()}
-                if self.complexity_with_kids(potential_kids) < min_complexity:
+                new_complexity = self.complexity_with_kids(potential_kids)
+                if new_complexity < min_complexity:
                     self.kids = potential_kids
                     self.rule = rule
+                    min_complexity = new_complexity
 
         if self.rule == SIZE_INDEX or self.checked_length == LENGTH_SPECIFIED:
             self.length_check = False

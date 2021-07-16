@@ -1,6 +1,6 @@
 namespace prev_generated_mappings {
 
-static constexpr size_t kRepetitions = 10;
+static constexpr size_t kRepetitions = 50;
 
 using CGFloat = double;
 

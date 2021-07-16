@@ -96,16 +96,9 @@ def generate_switches(p: Printer, rules, fields):
     p("}")
 
 def generate_decode(p: Printer, fields):
-    strings = [x.string for x in fields]
-    # rule = find_differentiating_rule(strings)
     p("static inline __attribute__((always_inline)) E decode(const std::string_view &string) {")
     p.indent()
-    # min_length = min([len(x.string) for x in fields])
-    # if rule[0] != SIZE_INDEX:
-    # p("if (string.size() < " + str(min_length) + ") { return E{}; }")
     generate_switches_via_tree(p, fields)
-    # generate_switches(p, rule, fields)
-    p("return E{};")
     p.deindent()
     p("}")
 

@@ -1,6 +1,6 @@
 namespace generated_mappings {
 
-static constexpr size_t kRepetitions = 10;
+static constexpr size_t kRepetitions = 50;
 
 using CGFloat = double;
 
@@ -176,16 +176,19 @@ struct PeakCategoryMapping {
                         return !std::memcmp(string.begin(), "14er", 4) ? E::k14er : E{};
                 }
             case 5:
-                switch(string[4]) {
-                    case '0':
+                switch(string[0]) {
+                    case 'A':
+                        return !std::memcmp(string.begin(), "AHP46", 5) ? E::ahp46 : E{};
+                    case 'F':
+                        return !std::memcmp(string.begin(), "Furth", 5) ? E::furth : E{};
+                    case 'J':
+                        return !std::memcmp(string.begin(), "JA100", 5) ? E::ja100 : E{};
+                    case 'M':
+                        return !std::memcmp(string.begin(), "Munro", 5) ? E::munro : E{};
+                    case 'T':
                         switch(string[3]) {
                             case '0':
-                                switch(string[1]) {
-                                    case 'A':
-                                        return !std::memcmp(string.begin(), "JA100", 5) ? E::ja100 : E{};
-                                    default: 
-                                        return !std::memcmp(string.begin(), "TW100", 5) ? E::tw100 : E{};
-                                }
+                                return !std::memcmp(string.begin(), "TW100", 5) ? E::tw100 : E{};
                             case '1':
                                 return !std::memcmp(string.begin(), "Top10", 5) ? E::top10 : E{};
                             case '4':
@@ -193,25 +196,18 @@ struct PeakCategoryMapping {
                             default: 
                                 return !std::memcmp(string.begin(), "Top50", 5) ? E::top50 : E{};
                         }
-                    case '6':
-                        return !std::memcmp(string.begin(), "AHP46", 5) ? E::ahp46 : E{};
-                    case 'a':
-                        return !std::memcmp(string.begin(), "Ultra", 5) ? E::ultra : E{};
-                    case 'h':
-                        return !std::memcmp(string.begin(), "Furth", 5) ? E::furth : E{};
                     default: 
-                        return !std::memcmp(string.begin(), "Munro", 5) ? E::munro : E{};
+                        return !std::memcmp(string.begin(), "Ultra", 5) ? E::ultra : E{};
                 }
             case 7:
-                switch(string[6]) {
-                    case 'o':
-                        return !std::memcmp(string.begin(), "Volcano", 7) ? E::volcano : E{};
-                    default: 
+                switch(string[0]) {
+                    case 'G':
                         return !std::memcmp(string.begin(), "Glacier", 7) ? E::glacier : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "Volcano", 7) ? E::volcano : E{};
                 }
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -245,7 +241,6 @@ struct Legacy_EntryTypeMapping {
                 return !std::memcmp(string.begin(), "funicular_station", 17) ? E::kFunicular : E{};
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -271,11 +266,11 @@ struct EntryTypeMapping {
     static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
         switch(string.size()) {
             case 4:
-                switch(string[3]) {
-                    case 'e':
-                        return !std::memcmp(string.begin(), "lake", 4) ? E::kLake : E{};
-                    case 'k':
+                switch(string[2]) {
+                    case 'a':
                         return !std::memcmp(string.begin(), "peak", 4) ? E::kPeak : E{};
+                    case 'k':
+                        return !std::memcmp(string.begin(), "lake", 4) ? E::kLake : E{};
                     default: 
                         return !std::memcmp(string.begin(), "pass", 4) ? E::kPass : E{};
                 }
@@ -284,31 +279,27 @@ struct EntryTypeMapping {
             case 6:
                 return !std::memcmp(string.begin(), "castle", 6) ? E::kCastle : E{};
             case 7:
-                switch(string[6]) {
+                switch(string[0]) {
+                    case 'a':
+                        return !std::memcmp(string.begin(), "amenity", 7) ? E::kAmenity : E{};
                     case 'g':
-                        return !std::memcmp(string.begin(), "parking", 7) ? E::kParking : E{};
-                    case 'r':
                         return !std::memcmp(string.begin(), "glacier", 7) ? E::kGlacier : E{};
                     default: 
-                        return !std::memcmp(string.begin(), "amenity", 7) ? E::kAmenity : E{};
+                        return !std::memcmp(string.begin(), "parking", 7) ? E::kParking : E{};
                 }
             case 9:
-                switch(string[8]) {
-                    case 'l':
-                        return !std::memcmp(string.begin(), "waterfall", 9) ? E::kWaterfall : E{};
+                switch(string[0]) {
+                    case 'a':
+                        return !std::memcmp(string.begin(), "alpineHut", 9) ? E::kMountainHut : E{};
+                    case 'v':
+                        return !std::memcmp(string.begin(), "viewpoint", 9) ? E::kViewpoint : E{};
                     default: 
-                        switch(string[7]) {
-                            case 'n':
-                                return !std::memcmp(string.begin(), "viewpoint", 9) ? E::kViewpoint : E{};
-                            default: 
-                                return !std::memcmp(string.begin(), "alpineHut", 9) ? E::kMountainHut : E{};
-                        }
+                        return !std::memcmp(string.begin(), "waterfall", 9) ? E::kWaterfall : E{};
                 }
             case 16:
                 return !std::memcmp(string.begin(), "funicularStation", 16) ? E::kFunicular : E{};
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -341,36 +332,32 @@ struct FunicularTypeMapping {
                         return !std::memcmp(string.begin(), "t-bar", 5) ? E::kDVGTrailTypeDragLift : E{};
                 }
             case 7:
-                switch(string[6]) {
-                    case 'a':
+                switch(string[0]) {
+                    case 'g':
                         return !std::memcmp(string.begin(), "gondola", 7) ? E::kDVGTrailTypeGondola : E{};
                     default: 
                         return !std::memcmp(string.begin(), "platter", 7) ? E::kDVGTrailTypeDragLift : E{};
                 }
             case 9:
-                switch(string[8]) {
-                    case 'r':
-                        switch(string[6]) {
-                            case 'c':
-                                return !std::memcmp(string.begin(), "cable_car", 9) ? E::kDVGTrailTypeCableCar : E{};
-                            default: 
-                                return !std::memcmp(string.begin(), "funicular", 9) ? E::kDVGTrailTypeFunicular : E{};
-                        }
-                    default: 
+                switch(string[0]) {
+                    case 'c':
+                        return !std::memcmp(string.begin(), "cable_car", 9) ? E::kDVGTrailTypeCableCar : E{};
+                    case 'd':
                         return !std::memcmp(string.begin(), "drag_lift", 9) ? E::kDVGTrailTypeDragLift : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "funicular", 9) ? E::kDVGTrailTypeFunicular : E{};
                 }
             case 10:
                 return !std::memcmp(string.begin(), "chair_lift", 10) ? E::kDVGTrailTypeChairLift : E{};
             case 12:
-                switch(string[11]) {
-                    case 'e':
-                        return !std::memcmp(string.begin(), "narrow_gauge", 12) ? E::kDVGTrailTypeNarrowGauge : E{};
-                    default: 
+                switch(string[0]) {
+                    case 'm':
                         return !std::memcmp(string.begin(), "magic_carpet", 12) ? E::kDVGTrailTypeMagicCarpet : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "narrow_gauge", 12) ? E::kDVGTrailTypeNarrowGauge : E{};
                 }
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -415,47 +402,43 @@ struct TagsMapping {
             case 6:
                 return !std::memcmp(string.begin(), "height", 6) ? E::height : E{};
             case 7:
-                switch(string[6]) {
-                    case 'e':
-                        return !std::memcmp(string.begin(), "hutType", 7) ? E::hutType : E{};
-                    case 'l':
-                        return !std::memcmp(string.begin(), "natural", 7) ? E::natural : E{};
-                    default: 
+                switch(string[0]) {
+                    case 'a':
                         return !std::memcmp(string.begin(), "amenity", 7) ? E::amenity : E{};
+                    case 'h':
+                        return !std::memcmp(string.begin(), "hutType", 7) ? E::hutType : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "natural", 7) ? E::natural : E{};
                 }
             case 8:
-                switch(string[7]) {
-                    case 'g':
+                switch(string[2]) {
+                    case 'i':
                         return !std::memcmp(string.begin(), "drinking", 8) ? E::drinking : E{};
+                    case 'p':
+                        return !std::memcmp(string.begin(), "capacity", 8) ? E::capacity : E{};
                     default: 
-                        switch(string[6]) {
-                            case 'r':
-                                return !std::memcmp(string.begin(), "category", 8) ? E::peakCategory : E{};
-                            default: 
-                                return !std::memcmp(string.begin(), "capacity", 8) ? E::capacity : E{};
-                        }
+                        return !std::memcmp(string.begin(), "category", 8) ? E::peakCategory : E{};
                 }
             case 9:
                 return !std::memcmp(string.begin(), "relatedID", 9) ? E::relatedID : E{};
             case 10:
                 return !std::memcmp(string.begin(), "population", 10) ? E::population : E{};
             case 11:
-                switch(string[6]) {
-                    case 'r':
-                        return !std::memcmp(string.begin(), "shelterType", 11) ? E::shelterType : E{};
-                    default: 
+                switch(string[0]) {
+                    case 'a':
                         return !std::memcmp(string.begin(), "amenityType", 11) ? E::amenityType : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "shelterType", 11) ? E::shelterType : E{};
                 }
             case 13:
-                switch(string[8]) {
-                    case 'r':
+                switch(string[0]) {
+                    case 'f':
                         return !std::memcmp(string.begin(), "funicularType", 13) ? E::funicularType : E{};
                     default: 
                         return !std::memcmp(string.begin(), "viewpointType", 13) ? E::viewpointType : E{};
                 }
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -488,45 +471,38 @@ struct ColorMapping { using E = Color;
             case 3:
                 return !std::memcmp(string.begin(), "red", 3) ? E{1, 0.4, 0.4} : E{};
             case 4:
-                switch(string[3]) {
+                switch(string[0]) {
                     case 'a':
                         return !std::memcmp(string.begin(), "aqua", 4) ? E{0.0, 0.8, 0.8} : E{};
-                    case 'e':
+                    case 'b':
                         return !std::memcmp(string.begin(), "blue", 4) ? E{0.3, 0.3, 1} : E{};
-                    case 'k':
-                        return !std::memcmp(string.begin(), "pink", 4) ? E{1.0, 0.3, 0.6} : E{};
-                    default: 
+                    case 'g':
                         return !std::memcmp(string.begin(), "gray", 4) ? E{0.5, 0.5, 0.5} : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "pink", 4) ? E{1.0, 0.3, 0.6} : E{};
                 }
             case 5:
-                switch(string[4]) {
-                    case 'e':
-                        return !std::memcmp(string.begin(), "white", 5) ? E{1, 1, 1} : E{};
-                    case 'k':
+                switch(string[2]) {
+                    case 'a':
                         return !std::memcmp(string.begin(), "black", 5) ? E{0.0, 0.0, 0} : E{};
+                    case 'e':
+                        return !std::memcmp(string.begin(), "green", 5) ? E{0.2, 0.8, 0.3} : E{};
+                    case 'i':
+                        return !std::memcmp(string.begin(), "white", 5) ? E{1, 1, 1} : E{};
                     default: 
-                        switch(string[3]) {
-                            case 'e':
-                                return !std::memcmp(string.begin(), "green", 5) ? E{0.2, 0.8, 0.3} : E{};
-                            default: 
-                                return !std::memcmp(string.begin(), "brown", 5) ? E{0.7, 0.5, 0} : E{};
-                        }
+                        return !std::memcmp(string.begin(), "brown", 5) ? E{0.7, 0.5, 0} : E{};
                 }
             case 6:
-                switch(string[5]) {
-                    case 'e':
-                        switch(string[4]) {
-                            case 'g':
-                                return !std::memcmp(string.begin(), "orange", 6) ? E{1.0, 0.4, 0} : E{};
-                            default: 
-                                return !std::memcmp(string.begin(), "purple", 6) ? E{0.5, 0, 0.5} : E{};
-                        }
+                switch(string[0]) {
+                    case 'o':
+                        return !std::memcmp(string.begin(), "orange", 6) ? E{1.0, 0.4, 0} : E{};
+                    case 'p':
+                        return !std::memcmp(string.begin(), "purple", 6) ? E{0.5, 0, 0.5} : E{};
                     default: 
                         return !std::memcmp(string.begin(), "yellow", 6) ? E{0.8, 0.85, 0} : E{};
                 }
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -555,35 +531,32 @@ struct TypeMapping { using E = Type;
             case 1:
                 return !std::memcmp(string.begin(), "x", 1) ? E::x : E{};
             case 3:
-                switch(string[2]) {
-                    case 'r':
+                switch(string[0]) {
+                    case 'b':
                         return !std::memcmp(string.begin(), "bar", 3) ? E::bar : E{};
                     default: 
                         return !std::memcmp(string.begin(), "dot", 3) ? E::dot : E{};
                 }
             case 5:
-                switch(string[4]) {
-                    case 'r':
-                        return !std::memcmp(string.begin(), "lower", 5) ? E::lower : E{};
-                    case 's':
+                switch(string[0]) {
+                    case 'c':
                         return !std::memcmp(string.begin(), "cross", 5) ? E::cross : E{};
+                    case 'l':
+                        return !std::memcmp(string.begin(), "lower", 5) ? E::lower : E{};
                     default: 
                         return !std::memcmp(string.begin(), "right", 5) ? E::right : E{};
                 }
             case 6:
-                switch(string[5]) {
-                    case 'e':
-                        switch(string[4]) {
-                            case 'l':
-                                return !std::memcmp(string.begin(), "circle", 6) ? E::circle : E{};
-                            default: 
-                                return !std::memcmp(string.begin(), "stripe", 6) ? E::stripe : E{};
-                        }
-                    default: 
+                switch(string[1]) {
+                    case 'i':
+                        return !std::memcmp(string.begin(), "circle", 6) ? E::circle : E{};
+                    case 'o':
                         return !std::memcmp(string.begin(), "corner", 6) ? E::corner : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "stripe", 6) ? E::stripe : E{};
                 }
             case 7:
-                switch(string[6]) {
+                switch(string[0]) {
                     case 'd':
                         return !std::memcmp(string.begin(), "diamond", 7) ? E::diamond : E{};
                     default: 
@@ -596,24 +569,23 @@ struct TypeMapping { using E = Type;
             case 12:
                 return !std::memcmp(string.begin(), "diamond_line", 12) ? E::diamondLine : E{};
             case 13:
-                switch(string[12]) {
-                    case 'e':
-                        return !std::memcmp(string.begin(), "triangle_line", 13) ? E::triangleLine : E{};
-                    default: 
+                switch(string[0]) {
+                    case 'd':
                         return !std::memcmp(string.begin(), "diamond_right", 13) ? E::diamondRight : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "triangle_line", 13) ? E::triangleLine : E{};
                 }
             case 14:
                 return !std::memcmp(string.begin(), "diamond_corner", 14) ? E::diamondCorner : E{};
             case 15:
-                switch(string[14]) {
-                    case 'd':
-                        return !std::memcmp(string.begin(), "triangle_turned", 15) ? E::triangleTurned : E{};
-                    default: 
+                switch(string[0]) {
+                    case 'r':
                         return !std::memcmp(string.begin(), "rectangle_lower", 15) ? E::lower : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "triangle_turned", 15) ? E::triangleTurned : E{};
                 }
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -668,30 +640,29 @@ struct ResourceFormatMapping {
     static inline __attribute__((always_inline)) E decode(const std::string_view &string) {
         switch(string.size()) {
             case 3:
-                switch(string[2]) {
-                    case 'B':
+                switch(string[0]) {
+                    case 'G':
                         return !std::memcmp(string.begin(), "GDB", 3) ? E::kGDB : E{};
-                    case 'K':
+                    case 'J':
                         return !std::memcmp(string.begin(), "J2K", 3) ? E::kJPEG2000 : E{};
-                    case 'L':
-                        return !std::memcmp(string.begin(), "TRL", 3) ? E::kTRL : E{};
-                    default: 
+                    case 'R':
                         return !std::memcmp(string.begin(), "RAW", 3) ? E::kRaw : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "TRL", 3) ? E::kTRL : E{};
                 }
             case 4:
                 return !std::memcmp(string.begin(), "HEIC", 4) ? E::kHEIC : E{};
             case 5:
-                switch(string[4]) {
-                    case 'C':
+                switch(string[0]) {
+                    case 'D':
                         return !std::memcmp(string.begin(), "DFRAC", 5) ? E::kDFRAC : E{};
-                    case 'P':
-                        return !std::memcmp(string.begin(), "M2SEP", 5) ? E::kM2SEP : E{};
-                    default: 
+                    case 'E':
                         return !std::memcmp(string.begin(), "EMPTY", 5) ? E::kEmpty : E{};
+                    default: 
+                        return !std::memcmp(string.begin(), "M2SEP", 5) ? E::kM2SEP : E{};
                 }
             default: return E{};
         }
-        return E{};
     }
 };
 
@@ -732,36 +703,35 @@ struct ResourceTypeMapping {
                         return !std::memcmp(string.begin(), "TEX", 3) ? DVGGeoResource::Type::kTEX : E{};
                 }
             case 4:
-                switch(string[3]) {
-                    case 'M':
-                        return !std::memcmp(string.begin(), "LDEM", 4) ? DVGGeoResource::Type::kLDEM : E{};
-                    case 'T':
-                        switch(string[0]) {
-                            case 'L':
-                                return !std::memcmp(string.begin(), "LSAT", 4) ? DVGGeoResource::Type::kLSAT : E{};
-                            default: 
-                                return !std::memcmp(string.begin(), "WSAT", 4) ? DVGGeoResource::Type::kWSAT : E{};
-                        }
-                    default: 
-                        return !std::memcmp(string.begin(), "LTEX", 4) ? DVGGeoResource::Type::kLTEX : E{};
-                }
-            case 5:
-                switch(string[4]) {
-                    case 'M':
-                        return !std::memcmp(string.begin(), "HDDEM", 5) ? DVGGeoResource::Type::kHDDEM : E{};
-                    default: 
+                switch(string[0]) {
+                    case 'L':
                         switch(string[1]) {
                             case 'D':
-                                return !std::memcmp(string.begin(), "HDSAT", 5) ? DVGGeoResource::Type::kHDSAT : E{};
+                                return !std::memcmp(string.begin(), "LDEM", 4) ? DVGGeoResource::Type::kLDEM : E{};
+                            case 'S':
+                                return !std::memcmp(string.begin(), "LSAT", 4) ? DVGGeoResource::Type::kLSAT : E{};
                             default: 
-                                return !std::memcmp(string.begin(), "LWSAT", 5) ? DVGGeoResource::Type::kLWSAT : E{};
+                                return !std::memcmp(string.begin(), "LTEX", 4) ? DVGGeoResource::Type::kLTEX : E{};
                         }
+                    default: 
+                        return !std::memcmp(string.begin(), "WSAT", 4) ? DVGGeoResource::Type::kWSAT : E{};
+                }
+            case 5:
+                switch(string[0]) {
+                    case 'H':
+                        switch(string[2]) {
+                            case 'D':
+                                return !std::memcmp(string.begin(), "HDDEM", 5) ? DVGGeoResource::Type::kHDDEM : E{};
+                            default: 
+                                return !std::memcmp(string.begin(), "HDSAT", 5) ? DVGGeoResource::Type::kHDSAT : E{};
+                        }
+                    default: 
+                        return !std::memcmp(string.begin(), "LWSAT", 5) ? DVGGeoResource::Type::kLWSAT : E{};
                 }
             case 6:
                 return !std::memcmp(string.begin(), "HDWSAT", 6) ? DVGGeoResource::Type::kHDWSAT : E{};
             default: return E{};
         }
-        return E{};
     }
 };
 
